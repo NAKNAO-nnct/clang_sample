@@ -1,102 +1,147 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char **argv){
-    int input;
-    printf("(1)¾å²¼È¿Å¾¡¢(2)º¸±¦È¿Å¾¡¢(3)180¡ë²óÅ¾¡¢(4)90¡ë²óÅ¾¡¢(5)270¡ë²óÅ¾\n¤É¤ì¤Ë¤·¤Ş¤¹¤«(1¡Á5)? ");
-    scanf("%d", &input);
+int main(int argc, char **argv)
+{
+	int input;
+	printf("(1)ä¸Šä¸‹åè»¢ã€(2)å·¦å³åè»¢ã€(3)180Â°å›è»¢ã€(4)90Â°å›è»¢ã€(5)270Â°å›è»¢\nã©ã‚Œã«ã—ã¾ã™ã‹(1ï½5)? ");
+	scanf("%d", &input);
 
-    char str[100];
-    int img1[1024][1024];  // ²èÁü¥Ğ¥Ã¥Õ¥¡
-    int img2[1024][1024];
-    int w,h;             // ²èÁü¤ÎÂç¤­¤µ
-    int d;               // ²èÁü¤Î³¬Ä´
-    int x,y;             // ²£½Ä¤Î¥¤¥ó¥Ç¥Ã¥¯¥¹
-    FILE *fp1, *fp2;
+	char str[100];
 
-    if( (fp1 = fopen(argv[1], "r") ) == NULL){
-	perror(argv[1]);
-	exit(1);
-    }
-    if( (fp2 = fopen(argv[2], "w") ) == NULL){
-	perror(argv[2]);
-	exit(1);
-    }
+	int w, h; // ç”»åƒã®å¤§ãã•
+	int d;	// ç”»åƒã®éšèª¿
+	int x, y; // æ¨ªç¸¦ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	FILE *fp1, *fp2;
 
-    // ¥Ø¥Ã¥À¤ÎÆÉ¤ß¹ş¤ß
-    fscanf( fp1, "%s", &str );        // ¥Ş¥¸¥Ã¥¯¥Ê¥ó¥Ğ¡¼
-    fscanf( fp1, "%d %d", &w, &h );   // ²èÁü¤ÎÂç¤­¤µ
-    fscanf( fp1, "%d", &d );          // ²èÁü¤Î³¬Ä´
+	if ((fp1 = fopen(argv[1], "r")) == NULL)
+	{
+		perror(argv[1]);
+		exit(1);
+	}
+	if ((fp2 = fopen(argv[2], "w")) == NULL)
+	{
+		perror(argv[2]);
+		exit(1);
+	}
 
+	// ãƒ˜ãƒƒãƒ€ã®èª­ã¿è¾¼ã¿
+	fscanf(fp1, "%s", &str);	  // ãƒã‚¸ãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼
+	fscanf(fp1, "%d %d", &w, &h); // ç”»åƒã®å¤§ãã•
+	fscanf(fp1, "%d", &d);		  // ç”»åƒã®éšèª¿
 
-    // ²èÁüËÜÂÎ
-    for(y = 0; y < h; y++){
-	for(x = 0; x < w; x++){
-	    fscanf(fp1, "%d", &(img1[x][y]));
+	int i;
+	// int img1 = (int **)malloc((w + h) * sizeof(int)); // ç”»åƒãƒãƒƒãƒ•ã‚¡
+	int **img1 = (int **)malloc(w * sizeof(int *));
+	for (i = 0; i < w; i++)
+	{
+		img1[i] = (int *)malloc(h * sizeof(int));
 	}
-    }
+	int **img2 = (int **)malloc(w * sizeof(int *));
+	for (i = 0; i < w; i++)
+	{
+		img2[i] = (int *)malloc(h * sizeof(int));
+	}
+	// int img2 = (int **)malloc((w + h) * sizeof(int));
 
-    switch(input){
-    case 1: {
-	for(y = 0; y < h; y++){
-	    for(x = 0; x < w; x++){
-		img2[x][h-y-1] = img1[x][y];
-	    }
+	// ç”»åƒæœ¬ä½“
+	for (y = 0; y < h; y++)
+	{
+		for (x = 0; x < w; x++)
+		{
+			fscanf(fp1, "%d", &(img1[x][y]));
+		}
 	}
-	break;}
-    case 2: {
-	for(y = 0; y < h; y++){
-	    for(x = 0; x < w; x++){
-		img2[w-x-1][y] = img1[x][y];
-	    }
+
+	switch (input)
+	{
+	case 1:
+	{
+		for (y = 0; y < h; y++)
+		{
+			for (x = 0; x < w; x++)
+			{
+				img2[x][h - y - 1] = img1[x][y];
+			}
+		}
+		break;
 	}
-	break;}
-    case 3: {
-	for(y = 0; y < h; y++){
-	    for(x = 0; x < w; x++){
-		img2[w-x-1][h-y-1] = img1[x][y];
-	    }
+	case 2:
+	{
+		for (y = 0; y < h; y++)
+		{
+			for (x = 0; x < w; x++)
+			{
+				img2[w - x - 1][y] = img1[x][y];
+			}
+		}
+		break;
 	}
-	break;}
-    case 4: {
-	for(y = 0; y < h; y++){
-	    for(x = 0; x < w; x++){
-		img2[h-y-1][x] = img1[x][y];
-	    }
+	case 3:
+	{
+		for (y = 0; y < h; y++)
+		{
+			for (x = 0; x < w; x++)
+			{
+				img2[w - x - 1][h - y - 1] = img1[x][y];
+			}
+		}
+		break;
 	}
-	break;}
-    case 5: {
-	for(y = 0; y < h; y++){
-	    for(x = 0; x < w; x++){
-		img2[y][w-x-1] = img1[x][y];
-	    }
+	case 4:
+	{
+		for (y = 0; y < h; y++)
+		{
+			for (x = 0; x < w; x++)
+			{
+				img2[h - y - 1][x] = img1[x][y];
+			}
+		}
+		break;
 	}
-	break;}
-    }
-    switch(input){
-    case 1:
-    case 2:
-    case 3:{
-	fprintf(fp2, "%s\n%d %d\n%d\n", str, w, h, d);
-	for(y = 0; y < h; y++){
-	    for(x = 0; x < w; x++){
-		fprintf(fp2, "%d ", img2[x][y]);
-	    }
-	    fprintf(fp2, "\n");
+	case 5:
+	{
+		for (y = 0; y < h; y++)
+		{
+			for (x = 0; x < w; x++)
+			{
+				img2[y][w - x - 1] = img1[x][y];
+			}
+		}
+		break;
 	}
-	break;
-    }
-    case 4:
-    case 5:{
-	fprintf(fp2, "%s\n%d %d\n%d\n", str, h, w, d);
-	for(y = 0; y < w; y++){
-	    for(x = 0; x < h; x++){
-		fprintf(fp2, "%d ", img2[x][y]);
-	    }
-	    fprintf(fp2, "\n");
 	}
-	break;
-    }
-    }
-    return 0;
+	switch (input)
+	{
+	case 1:
+	case 2:
+	case 3:
+	{
+		fprintf(fp2, "%s\n%d %d\n%d\n", str, w, h, d);
+		for (y = 0; y < h; y++)
+		{
+			for (x = 0; x < w; x++)
+			{
+				fprintf(fp2, "%d ", img2[x][y]);
+			}
+			fprintf(fp2, "\n");
+		}
+		break;
+	}
+	case 4:
+	case 5:
+	{
+		fprintf(fp2, "%s\n%d %d\n%d\n", str, h, w, d);
+		for (y = 0; y < w; y++)
+		{
+			for (x = 0; x < h; x++)
+			{
+				fprintf(fp2, "%d ", img2[x][y]);
+			}
+			fprintf(fp2, "\n");
+		}
+		break;
+	}
+	}
+	return 0;
 }
